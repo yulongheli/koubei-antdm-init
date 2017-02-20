@@ -1,33 +1,39 @@
 import React, { PropTypes, Component } from 'react';
 import { List, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import ImageUploader from './ImageUploader';
 
 class ShopCreate extends Component {
 
-  static propTypes = {
-    form: PropTypes.object,
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
-
-  state = {};
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    
     return (
       <List>
         <InputItem
-          {...getFieldProps('phone')}
-          type="phone"
-          placeholder="186 1234 1234"
-        >手机号码</InputItem>
+          {...getFieldDecorator('name')}
+          type="text"
+          placeholder="门店名称"
+        >门店名称：</InputItem>
         <InputItem
-          {...getFieldProps('password')}
-          type="password"
-          placeholder="****"
-        >密码</InputItem>
+          {...getFieldDecorator('des')}
+          type="text"
+          placeholder="描述"
+        >描述：</InputItem>
+        <List.Item>
+          <ImageUploader/>
+        </List.Item>
       </List>
     );
   }
 }
+
+ShopCreate.propTypes = {
+  form: PropTypes.object,
+};
 
 export default createForm()(ShopCreate);
