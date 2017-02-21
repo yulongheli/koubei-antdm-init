@@ -1,37 +1,52 @@
-import React, { PropTypes, Component } from 'react';
-import { List, InputItem, Button, WhiteSpace, WingBlank } from 'antd-mobile';
+import React, { Component, PropTypes } from 'react';
+import { InputItem, Button, WhiteSpace, WingBlank } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import './user.less';
 
 class Login extends Component {
-
   constructor(props) {
     super(props);
-    this.state = {};
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  login() {
-    location.hash = 'shop/list';
+  componentDidMount() {
+    this.props.form.validateFields();
   }
-
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.router.push('/shop/list');
+  }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldsError } = this.props.form;
+    const hasError = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
     return (
       <div>
-        <List>
-          <InputItem
-            {...getFieldDecorator('phone')}
-            type="phone"
-            placeholder="186 1234 1234"
-          >手机号码：</InputItem>
-          <InputItem
-            {...getFieldDecorator('password')}
-            type="password"
-            placeholder="****"
-          >密码：</InputItem>
-        </List>
         <WhiteSpace size="xl" />
+        {getFieldDecorator('userName', {
+          rules: [{
+            required: true,
+          }],
+        })(
+          <InputItem autoFocus placeholder="请输入用户名">用户名</InputItem>
+        )}
+
+        {getFieldDecorator('password', {
+          rules: [{
+            required: true,
+          }],
+        })(
+          <InputItem type="password" placeholder="请输入密码">密码</InputItem>
+        )}
+
+        <WhiteSpace />
+
         <WingBlank>
-          <Button className="btn" type="primary" onClick={this.login}>登录</Button>
+          <Button
+            type="primary"
+            disabled={hasError(getFieldsError())}
+            onClick={this.handleSubmit}
+          >
+            登录
+          </Button>
         </WingBlank>
       </div>
     );
@@ -40,6 +55,7 @@ class Login extends Component {
 
 Login.propTypes = {
   form: PropTypes.object,
+  router: PropTypes.object,
 };
 
 export default createForm()(Login);
