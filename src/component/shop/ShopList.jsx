@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import store from './store';
-import { NavBar, Icon, Card, Toast, WingBlank, WhiteSpace } from 'antd-mobile';
+import { NavBar, Icon, Card, WingBlank, WhiteSpace } from 'antd-mobile';
 
 class ShopList extends Component {
   constructor(props) {
@@ -18,17 +18,11 @@ class ShopList extends Component {
   }
 
   handleClickShop(id) {
-    this.props.router.push(`/shop/view/${id}`);
+    this.props.router.push(`/shop/edit/${id}`);
   }
 
   handleClickNew() {
     this.props.router.push('/shop/add');
-  }
-
-  reload() {
-    this.setState({
-      shopList: store.getList(),
-    });
   }
 
   render() {
@@ -39,7 +33,11 @@ class ShopList extends Component {
           mode="light"
           onLeftClick={this.handleClickBack}
           rightContent={[
-            <span key="1" onClick={this.handleClickNew}>新增</span>,
+            <a key="0" onClick={this.handleClickNew}>
+              <Icon
+                type={require('../../assets/svg/plus.svg')}
+              />
+            </a>,
           ]}
         >门店
         </NavBar>

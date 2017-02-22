@@ -1,13 +1,12 @@
 const pxtorem = require('postcss-pxtorem');
-const glob = require('glob');
+const path = require('path');
 
-const svgDirs = ['./src/assets/svg']; // 如果需要本地部署图标，需要在此加入本地图标路径，本地部署方式见以下文档
-// 把`antd-mobile/lib`目录下的 svg 文件加入进来，给 svg-sprite-loader 插件处理
-// 注意check antd-mobile 在你本机node_modules下的路径，因为cnpm之类会改变node_modules的存放方式
-// windows参照这里处理 https://github.com/ant-design/ant-design-mobile/issues/840#issuecomment-281248538
-glob.sync('node_modules/**/*antd-mobile/lib', { dot: true }).forEach(p => {
-  svgDirs.push(new RegExp(p));
-});
+// 如果需要本地部署图标，需要在此加入本地图标路径
+const svgDirs = [
+  path.resolve(__dirname, 'src/assets/svg'),
+];
+const antDir = require.resolve('antd-mobile').replace(/warn\.js$/, '');
+svgDirs.push(antDir);
 
 module.exports = webpackConfig => {
   webpackConfig.babel.plugins.push('transform-runtime');
@@ -19,6 +18,16 @@ module.exports = webpackConfig => {
   webpackConfig.module.loaders = webpackConfig.module.loaders.filter(
     loader => loader.test.toString().indexOf('.svg') === -1
   );
+
+  // 因为一个 SVG 文件不能被处理两遍. exclude 掉 atool-build 默认为svg配置的svg-url-loade
+  // https://github.com/ant-tool/atool-build/blob/e4bd2959689b6a95cb5c1c854a5db8c98676bdb3/src/getWebpackCommonConfig.js#L161
+  // https://github.com/kisenka/svg-sprite-loader/issues/4
+  webpackConfig.module.loaders.forEach(loader => {
+    if (loader.test.toString() === '/\\.svg(\\?v=\\d+\\.\\d+\\.\\d+)?$/') {
+      loader.exclude = svgDirs;
+    }
+  });
+
   webpackConfig.module.loaders.push({
     test: /\.svg$/,
     loader: require.resolve('svg-sprite-loader'),

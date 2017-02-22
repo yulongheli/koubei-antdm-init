@@ -1,17 +1,57 @@
 import React, { Component, PropTypes } from 'react';
-import AppLayout from '../AppLayout';
 import store from './store';
 import ShopForm from './ShopForm';
+import { NavBar, WhiteSpace, Toast, Modal, Icon } from 'antd-mobile';
+const alert = Modal.alert;
 
 export default class ShopEdit extends Component {
   constructor(props) {
     super(props);
     this.shop = store.getShop(this.props.params.id);
+    this.handleClickBack = this.handleClickBack.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleClickBack() {
+    this.props.router.goBack();
+  }
+
+  handleDelete(id) {
+    alert('删除', `确定删除${this.shop.shopName}吗？`, [
+      {
+        text: '确定',
+        onPress: () => {
+          store.delShop(id);
+          Toast.info('门店已删除');
+          this.props.router.push('/shop/list');
+        },
+      },
+      {
+        text: '取消',
+      },
+    ]);
   }
 
   render() {
     return (
-      <AppLayout><ShopForm isEdit shop={this.shop} router={this.props.router} /></AppLayout>
+      <div>
+        <NavBar
+          leftContent="返回"
+          mode="light"
+          onLeftClick={this.handleClickBack}
+          rightContent={[
+            <a key="0" onClick={() => this.handleDelete(this.shop.shopId)}>
+              <Icon
+                type={require('../../assets/svg/delete.svg')}
+              />
+            </a>,
+          ]}
+        >
+          {this.shop.shopName}
+        </NavBar>
+        <WhiteSpace />
+        <ShopForm isEdit shop={this.shop} router={this.props.router} />
+      </div>
     );
   }
 }
