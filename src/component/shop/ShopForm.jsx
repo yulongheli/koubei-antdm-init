@@ -13,6 +13,31 @@ import './shop.less';
 const payTypes = Object.keys(PAY_TYPE_TEXT)
   .map(type => ({ label: PAY_TYPE_TEXT[type], value: type }));
 
+const getTreeNodes = (values, tree) => {
+  const nodes = [];
+  let levelList = tree;
+  values.forEach(v => {
+    if (!levelList) {
+      return;
+    }
+    const node = levelList.find(n => n.value === v);
+    if (node) {
+      nodes.push(node);
+      levelList = node.children;
+    }
+  });
+  return nodes;
+};
+
+const getBrandName = brandId => brands.find(brand => brand.value === brandId).label;
+
+const getCategoryName = categoryIds => {
+  const categoryTreeNodes = getTreeNodes(categoryIds, category);
+  return categoryTreeNodes.reduce(
+    (acc, node) => (acc === '' ? node.label : `${acc} - ${node.label}`),
+    '');
+};
+
 class ShopForm extends Component {
   constructor(props) {
     super(props);
@@ -28,20 +53,28 @@ class ShopForm extends Component {
     this.setState({
       submitting: true,
     });
+
     validateFields((err, values) => {
       if (!err) {
+        const areaFields = getTreeNodes(values.residence, areas);
         Object.assign(this.props.shop, {
           brandId: values.brandId[0],
+          brandName: getBrandName(values.brandId[0]),
           shopName: values.shopName,
-          provinceId: values.residence[0],
-          cityId: values.residence[1],
-          disctrictId: values.residence[2],
+          provinceId: areaFields[0].value,
+          provinceName: areaFields[0].label,
+          cityId: areaFields[1].value,
+          cityName: areaFields[1].label,
+          districtId: areaFields[2] ? areaFields[2].value : '',
+          districtName: areaFields[2] ? areaFields[2].label : '',
           categoryIds: values.categoryIds,
+          categoryName: getCategoryName(values.categoryIds),
           address: values.address,
           mobileNo: values.mobileNo,
           payType: values.payType[0],
           receiveUserId: values.receiveUserId,
         });
+        console.log(this.props.shop)
         if (this.props.isEdit) {
           store.saveShop(this.props.shop.shopId, this.props.shop);
         } else {
@@ -63,6 +96,7 @@ class ShopForm extends Component {
 
     return (
       <div>
+
         <List>
           <Picker
             extra="请选择(必选)"
@@ -94,12 +128,16 @@ class ShopForm extends Component {
           >
             <List.Item arrow="horizontal">选择地区</List.Item>
           </Picker>
+        </List>
+        <List renderHeader={() => '门店Logo'}>
           <ImagePicker
             files={images}
             onChange={this.onLogoChange}
             onImageClick={(index, fs) => console.log(index, fs)}
             selectable={images.length < 5}
           />
+        </List>
+        <List>
           <InputItem
             className="shop-form-input"
             {...getFieldProps('address', {

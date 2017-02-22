@@ -18,7 +18,7 @@ class ShopList extends Component {
   }
 
   handleClickShop(id) {
-    this.props.router.push(`/shop/edit/${id}`);
+    this.props.router.push(`/shop/view/${id}`);
   }
 
   handleClickNew() {

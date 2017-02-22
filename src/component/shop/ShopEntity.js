@@ -48,7 +48,7 @@ const EmptyShop = {
   },
   'shopId': '',
   'shopName': '',
-  'shopLogo': '',
+  'shopLogo': 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
   'shopLastModified': '',
   'shopProblemLabels': {
     'addressErrorReasons': [],
