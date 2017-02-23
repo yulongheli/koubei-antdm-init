@@ -49,10 +49,12 @@ class ShopList extends Component {
                 <Card.Header
                   title={shop.shopName}
                   thumb={shop.shopLogo}
-                  extra="extra info"
+                  extra={shop.brandName}
                 />
                 <Card.Body>
-                  <div>门店简介</div>
+                  <div>
+                    <p>品类：{shop.categoryName}</p>
+                  </div>
                 </Card.Body>
                 <Card.Footer
                   content={shop.mobileNo}
