@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import store from './store';
 import ShopForm from './ShopForm';
 import { NavBar, WhiteSpace, Toast, Modal, Icon } from 'antd-mobile';
+import svg from '../../assets/svg';
 const alert = Modal.alert;
 
 export default class ShopEdit extends Component {
@@ -42,7 +43,7 @@ export default class ShopEdit extends Component {
           rightContent={[
             <a key="0" onClick={() => this.handleDelete(this.shop.shopId)}>
               <Icon
-                type={require('../../assets/svg/delete.svg')}
+                type={svg.delete}
               />
             </a>,
           ]}

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import store from './store';
 import { NavBar, Icon, Card, WingBlank, WhiteSpace } from 'antd-mobile';
+import svg from '../../assets/svg';
 
 class ShopList extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class ShopList extends Component {
           rightContent={[
             <a key="0" onClick={this.handleClickNew}>
               <Icon
-                type={require('../../assets/svg/plus.svg')}
+                type={svg.plus}
               />
             </a>,
           ]}

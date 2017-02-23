@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import store from './store';
 import { NavBar, WhiteSpace, Toast, Modal, Icon, List } from 'antd-mobile';
 import { PAY_TYPE_TEXT } from './config';
+import svg from '../../assets/svg';
 const alert = Modal.alert;
 const Item = List.Item;
 
@@ -48,12 +49,12 @@ export default class ShopEdit extends Component {
           rightContent={[
             <a key="0" onClick={() => this.handleDelete(this.shop.shopId)}>
               <Icon
-                type={require('../../assets/svg/delete.svg')}
+                type={svg.delete}
               />
             </a>,
             <a key="1" onClick={() => this.handleEdit(this.shop.shopId)}>
               <Icon
-                type={require('../../assets/svg/edit.svg')}
+                type={svg.edit}
               />
             </a>,
           ]}
